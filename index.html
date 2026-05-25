@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Struva — Creator Revenue Partner</title>
+<title>Kaido — Creator Revenue Partner</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -17,24 +16,71 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:300;font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased;}
 .wrap{max-width:1080px;margin:0 auto;padding:0 6vw;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.3rem 6vw;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(15,13,11,0.92);backdrop-filter:blur(14px);}
+
+/* ───── Scroll progress bar ───── */
+.scroll-progress{position:fixed;top:0;left:0;height:1px;width:0;background:linear-gradient(90deg,transparent,var(--amber));z-index:200;transition:width 0.08s linear;pointer-events:none;}
+
+/* ───── Nav (state shift on scroll) ───── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.3rem 6vw;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid transparent;background:rgba(15,13,11,0);backdrop-filter:blur(0px);transition:background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease;}
+nav.scrolled{background:rgba(15,13,11,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding-top:1rem;padding-bottom:1rem;}
 .nav-left{display:flex;align-items:baseline;gap:0.6rem;}
 .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:var(--cream);text-decoration:none;letter-spacing:0.04em;}
 .nav-tag{font-size:0.63rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;}
 .lang-toggle{display:flex;border:1px solid var(--border2);border-radius:3px;overflow:hidden;}
 .lang-btn{padding:0.3rem 0.85rem;font-size:0.68rem;letter-spacing:0.1em;font-family:'DM Sans',sans-serif;font-weight:400;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:background 0.18s,color 0.18s;}
 .lang-btn.active{background:var(--amber);color:#0f0d0b;}
+
+/* ───── Reveal-on-scroll primitives ───── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s cubic-bezier(0.2,0.7,0.2,1), transform 0.9s cubic-bezier(0.2,0.7,0.2,1);will-change:opacity,transform;}
+.reveal.in{opacity:1;transform:none;}
+.reveal-soft{opacity:0;transform:translateY(14px);transition:opacity 0.7s ease, transform 0.7s ease;}
+.reveal-soft.in{opacity:1;transform:none;}
+.reveal-left{opacity:0;transform:translateX(-24px);transition:opacity 0.9s cubic-bezier(0.2,0.7,0.2,1), transform 0.9s cubic-bezier(0.2,0.7,0.2,1);}
+.reveal-left.in{opacity:1;transform:none;}
+.reveal-right{opacity:0;transform:translateX(24px);transition:opacity 0.9s cubic-bezier(0.2,0.7,0.2,1), transform 0.9s cubic-bezier(0.2,0.7,0.2,1);}
+.reveal-right.in{opacity:1;transform:none;}
+
+/* Staggered children: each direct child of .stagger fades up after parent enters */
+.stagger > *{opacity:0;transform:translateY(20px);transition:opacity 0.75s ease, transform 0.75s ease;}
+.stagger.in > *{opacity:1;transform:none;}
+.stagger.in > *:nth-child(1){transition-delay:0.05s;}
+.stagger.in > *:nth-child(2){transition-delay:0.18s;}
+.stagger.in > *:nth-child(3){transition-delay:0.31s;}
+.stagger.in > *:nth-child(4){transition-delay:0.44s;}
+.stagger.in > *:nth-child(5){transition-delay:0.57s;}
+.stagger.in > *:nth-child(6){transition-delay:0.70s;}
+
+/* ───── Hero ───── */
 #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:10rem 6vw 7rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
-.hero-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-size:clamp(6rem,18vw,18rem);font-weight:300;color:rgba(200,151,58,0.04);white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:-0.02em;}
-.eyebrow{font-size:0.66rem;letter-spacing:0.2em;color:var(--amber);text-transform:uppercase;margin-bottom:1.75rem;}
+.hero-watermark{position:absolute;top:50%;left:50%;font-family:'Cormorant Garamond',serif;font-size:clamp(6rem,18vw,18rem);font-weight:300;color:rgba(200,151,58,0.04);white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:-0.02em;will-change:transform;transform:translate(-50%,-50%);}
+.hero-inner{position:relative;z-index:1;}
+.hero-inner > *{opacity:0;transform:translateY(22px);animation:heroIn 1s cubic-bezier(0.2,0.7,0.2,1) forwards;}
+.hero-inner > *:nth-child(1){animation-delay:0.15s;}
+.hero-inner > *:nth-child(2){animation-delay:0.15s;}
+.hero-inner > *:nth-child(3){animation-delay:0.30s;}
+.hero-inner > *:nth-child(4){animation-delay:0.30s;}
+.hero-inner > *:nth-child(5){animation-delay:0.50s;}
+.hero-inner > *:nth-child(6){animation-delay:0.50s;}
+.hero-inner > *:nth-child(7){animation-delay:0.65s;}
+.hero-inner > *:nth-child(8){animation-delay:0.65s;}
+.hero-inner > *:nth-child(9){animation-delay:0.85s;}
+@keyframes heroIn{to{opacity:1;transform:none;}}
+
+.eyebrow{font-size:0.66rem;letter-spacing:0.2em;color:var(--amber);text-transform:uppercase;margin-bottom:1.75rem;position:relative;display:inline-block;padding-left:2.5rem;}
+.eyebrow::before{content:"";position:absolute;left:0;top:50%;width:2rem;height:1px;background:var(--amber);transform-origin:left;animation:lineGrow 1.1s ease 0.4s both;}
+@keyframes lineGrow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
 .hero-h{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,6.5vw,5.5rem);font-weight:300;line-height:1.05;margin-bottom:2rem;max-width:820px;}
 .hero-h em{font-style:italic;color:var(--amber);}
 .hero-sub{font-size:1rem;color:var(--muted);max-width:500px;margin-bottom:1.2rem;line-height:1.85;}
 .hero-credential{font-size:0.78rem;color:var(--amber-dim);letter-spacing:0.04em;margin-bottom:3rem;}
 .btn-wrap{display:flex;flex-direction:column;gap:0.6rem;align-items:flex-start;}
-.btn{display:inline-block;padding:0.85rem 2.2rem;border:1px solid var(--amber-dim);color:var(--amber);text-decoration:none;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:400;transition:background 0.2s,color 0.2s,border-color 0.2s;}
-.btn:hover{background:var(--amber);color:var(--bg);border-color:var(--amber);}
+.btn{display:inline-block;padding:0.85rem 2.2rem;border:1px solid var(--amber-dim);color:var(--amber);text-decoration:none;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:400;transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;position:relative;overflow:hidden;}
+.btn::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at center, rgba(200,151,58,0.25), transparent 70%);opacity:0;transition:opacity 0.4s ease;}
+.btn:hover{background:var(--amber);color:var(--bg);border-color:var(--amber);transform:translateY(-2px);box-shadow:0 12px 28px -16px rgba(200,151,58,0.55);}
+.btn:hover::after{opacity:1;}
 .btn-note{font-size:0.7rem;color:var(--dim);letter-spacing:0.04em;}
+
+/* ───── Sections ───── */
 #beforeafter,#pain,#faq{background:var(--bg2);}
 #beforeafter{padding:8rem 6vw;border-bottom:1px solid var(--border);}
 .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3.5rem;}
@@ -45,58 +91,81 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.3rem 6vw;display:f
 .ba-col.after .ba-label{color:var(--amber);}
 .ba-item{display:flex;gap:0.85rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid rgba(240,232,216,0.06);}
 .ba-item:last-child{border-bottom:none;}
-.ba-icon{font-size:0.7rem;padding-top:0.4rem;min-width:1rem;text-align:center;}
+.ba-icon{font-size:0.7rem;padding-top:0.4rem;min-width:1rem;text-align:center;transition:transform 0.3s ease;}
+.ba-col.after .ba-item:hover .ba-icon{transform:translateX(4px);}
 .ba-text{font-size:0.92rem;color:var(--muted);line-height:1.6;}
 .ba-col.after .ba-text{color:var(--cream);}
+
 #how{padding:8rem 6vw;border-bottom:1px solid var(--border);text-align:center;background:var(--bg);}
 .how-steps{margin-top:5rem;display:flex;flex-direction:column;gap:0;}
-.how-step{padding:3.5rem 0;border-top:1px solid var(--border);display:grid;grid-template-columns:4rem 1fr;gap:2rem;align-items:start;text-align:left;}
+.how-step{padding:3.5rem 0;border-top:1px solid var(--border);display:grid;grid-template-columns:4rem 1fr;gap:2rem;align-items:start;text-align:left;transition:background 0.5s ease;}
 .how-step:last-child{border-bottom:1px solid var(--border);}
-.step-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--amber);line-height:1;opacity:0.5;}
+.how-step:hover{background:linear-gradient(90deg, rgba(200,151,58,0.04), transparent 70%);}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--amber);line-height:1;opacity:0.5;transition:opacity 0.4s ease, transform 0.4s ease;}
+.how-step:hover .step-num{opacity:1;transform:translateX(-4px);}
 .step-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:300;line-height:1.1;margin-bottom:0.6rem;}
 .step-title em{font-style:italic;color:var(--amber);}
 .step-sub{font-size:0.92rem;color:var(--muted);line-height:1.75;}
+
 #pain{padding:8rem 6vw;border-bottom:1px solid var(--border);}
 .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3.5rem;}
-.pain-card{padding:2rem;border:1px solid var(--border);background:var(--bg2);}
+.pain-card{padding:2rem;border:1px solid var(--border);background:var(--bg2);transition:border-color 0.35s ease, transform 0.35s ease, background 0.35s ease;}
+.pain-card:hover{border-color:var(--border2);transform:translateY(-3px);background:var(--bg3);}
 .pain-q{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;line-height:1.3;margin-bottom:1rem;color:var(--cream);}
 .pain-a{font-size:0.88rem;color:var(--muted);line-height:1.75;}
 .pain-a strong{color:var(--cream);font-weight:400;}
+
 #services{padding:8rem 6vw;border-bottom:1px solid var(--border);}
 .section-tag{font-size:0.63rem;letter-spacing:0.2em;color:var(--amber);text-transform:uppercase;margin-bottom:4rem;padding-left:0.85rem;border-left:2px solid var(--amber);}
-.service-item{display:grid;grid-template-columns:3rem 1fr;gap:1.5rem;align-items:start;padding:2.2rem 0;border-top:1px solid var(--border);}
-.service-item:last-child{border-bottom:1px solid var(--border);}
-.snum{font-size:0.66rem;color:var(--amber-dim);letter-spacing:0.1em;padding-top:0.5rem;}
+.service-item{display:grid;grid-template-columns:3rem 1fr;gap:1.5rem;align-items:start;padding:2.2rem 0;border-top:1px solid var(--border);transition:padding-left 0.4s ease, background 0.4s ease;}
+.service-item:hover{padding-left:1rem;background:linear-gradient(90deg, rgba(200,151,58,0.04), transparent 80%);}
+.service-item:last-of-type{border-bottom:1px solid var(--border);}
+.snum{font-size:0.66rem;color:var(--amber-dim);letter-spacing:0.1em;padding-top:0.5rem;transition:color 0.3s ease;}
+.service-item:hover .snum{color:var(--amber);}
 .stext-en{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;line-height:1.2;}
 .stext-zh{font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:300;color:var(--cream);}
 .services-note{margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);font-size:0.88rem;color:var(--muted);}
 .services-note strong{color:var(--cream);font-weight:400;}
+
 #faq{padding:8rem 6vw;border-bottom:1px solid var(--border);}
 .faq-list{margin-top:3.5rem;}
-.faq-item{border-top:1px solid var(--border);padding:2rem 0;}
+.faq-item{border-top:1px solid var(--border);padding:2rem 0;transition:padding-left 0.4s ease;}
+.faq-item:hover{padding-left:0.6rem;}
 .faq-item:last-child{border-bottom:1px solid var(--border);}
 .faq-q{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;line-height:1.3;margin-bottom:0.85rem;color:var(--cream);}
 .faq-a{font-size:0.92rem;color:var(--muted);line-height:1.8;max-width:680px;}
 .faq-a strong{color:var(--cream);font-weight:400;}
+
 #about{padding:8rem 6vw;border-bottom:1px solid var(--border);}
 .about-layout{display:grid;grid-template-columns:1fr 2.4fr;gap:6rem;align-items:start;}
-.photo-frame{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1px solid var(--border);overflow:hidden;}
-.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;filter:grayscale(10%) sepia(8%) brightness(0.95);opacity:0.88;}
+.photo-frame{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1px solid var(--border);overflow:hidden;position:relative;}
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;filter:grayscale(10%) sepia(8%) brightness(0.95);opacity:0.88;transition:transform 1.4s cubic-bezier(0.2,0.7,0.2,1), filter 0.6s ease, opacity 0.6s ease;will-change:transform;}
+.photo-frame:hover img{filter:grayscale(0%) sepia(0%) brightness(1);opacity:1;}
 .photo-caption{margin-top:0.9rem;font-size:0.65rem;color:var(--amber-dim);letter-spacing:0.12em;text-transform:uppercase;}
 .about-body{font-size:1rem;color:var(--muted);line-height:1.9;margin-bottom:2.5rem;}
 .about-body strong{color:var(--cream);font-weight:400;}
 .about-stats{display:flex;gap:3rem;padding-top:2rem;border-top:1px solid var(--border);}
 .stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--amber);line-height:1;margin-bottom:0.3rem;}
 .stat-label{font-size:0.68rem;color:var(--dim);letter-spacing:0.1em;text-transform:uppercase;}
-#book{padding:9rem 6vw;text-align:center;background:var(--cream-bg);}
+
+#book{padding:9rem 6vw;text-align:center;background:var(--cream-bg);position:relative;overflow:hidden;}
 .book-h{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,4rem);font-weight:300;line-height:1.15;margin-bottom:1.25rem;color:var(--cream-dark);}
 .book-sub{font-size:0.95rem;color:var(--cream-muted);margin-bottom:0.4rem;}
 .book-sub2{font-size:0.82rem;color:var(--cream-muted);opacity:0.7;margin-bottom:3.5rem;}
 #book .btn{border-color:rgba(26,21,16,0.35);color:var(--cream-dark);}
-#book .btn:hover{background:var(--cream-dark);color:var(--cream-bg);border-color:var(--cream-dark);}
+#book .btn:hover{background:var(--cream-dark);color:var(--cream-bg);border-color:var(--cream-dark);box-shadow:0 12px 28px -16px rgba(26,21,16,0.45);}
 footer{padding:1.75rem 6vw;background:var(--cream-bg);border-top:1px solid rgba(26,21,16,0.1);display:flex;justify-content:space-between;align-items:center;font-size:0.7rem;color:var(--cream-muted);}
 body:not(.lang-zh) .zh{display:none !important}
 body.lang-zh .en{display:none !important}
+
+/* ───── Reduce motion (accessibility) ───── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important;}
+  .reveal,.reveal-soft,.reveal-left,.reveal-right{opacity:1 !important;transform:none !important;}
+  .stagger > *{opacity:1 !important;transform:none !important;}
+  .hero-watermark{transform:translate(-50%,-50%) !important;}
+}
+
 @media(max-width:960px){
   .pain-grid{grid-template-columns:1fr}
   .ba-grid{grid-template-columns:1fr;gap:0.5rem}
@@ -109,7 +178,7 @@ body.lang-zh .en{display:none !important}
   .nav-tag{display:none}
   #hero{padding:7rem 5vw 4.5rem}
   #beforeafter,#how,#pain,#services,#faq,#about,#book{padding:4rem 5vw}
-  .eyebrow{font-size:0.58rem;letter-spacing:0.14em}
+  .eyebrow{font-size:0.58rem;letter-spacing:0.14em;padding-left:2.2rem;}
   .ba-col{padding:1.75rem}
   .how-step{grid-template-columns:2.5rem 1fr;gap:1rem;padding:2rem 0}
   .step-num{font-size:2.2rem}
@@ -123,14 +192,22 @@ body.lang-zh .en{display:none !important}
   footer{flex-direction:column;gap:0.5rem;text-align:center}
   .pain-card{padding:1.5rem}
   .faq-item{padding:1.5rem 0}
+  /* Lighter motion on small screens */
+  .reveal,.reveal-left,.reveal-right{transform:translateY(18px);transition-duration:0.6s;}
+  .reveal-left,.reveal-right{transform:translateY(18px);}
+  .reveal.in,.reveal-left.in,.reveal-right.in{transform:none;}
+  .service-item:hover,.faq-item:hover{padding-left:0;}
+  .pain-card:hover{transform:none;}
 }
 </style>
 </head>
 <body>
 
-<nav>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav id="nav">
   <div class="nav-left">
-    <a href="#" class="nav-logo">Struva</a>
+    <a href="#" class="nav-logo">Kaido</a>
     <span class="nav-tag en">· Creator Revenue Partner</span>
     <span class="nav-tag zh">· 創作者收益合夥人</span>
   </div>
@@ -141,7 +218,7 @@ body.lang-zh .en{display:none !important}
 </nav>
 
 <section id="hero">
-  <div class="hero-watermark">Revenue</div>
+  <div class="hero-watermark" id="heroWatermark">Revenue</div>
   <div class="hero-inner">
     <p class="eyebrow en">I build the system. You keep the audience. We split the revenue.</p>
     <p class="eyebrow zh">我建立系統。你保留受眾。我們分享收益。</p>
@@ -162,24 +239,28 @@ body.lang-zh .en{display:none !important}
 
 <section id="beforeafter">
   <div class="wrap">
-    <p class="section-tag en">Before &amp; After</p>
-    <p class="section-tag zh">合作前後對比</p>
+    <p class="section-tag en reveal-soft">Before &amp; After</p>
+    <p class="section-tag zh reveal-soft">合作前後對比</p>
     <div class="ba-grid">
-      <div class="ba-col">
+      <div class="ba-col reveal-left">
         <p class="ba-label en">Right now</p>
         <p class="ba-label zh">現在的狀況</p>
-        <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Views coming in, no way to capture them</p><p class="ba-text zh">有觀看人數，但沒有辦法留住他們</p></div>
-        <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Followers with nowhere to go after watching</p><p class="ba-text zh">追蹤者看完影片後無處可去</p></div>
-        <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">No offer, or an offer sitting with no funnel behind it</p><p class="ba-text zh">沒有產品，或有產品但沒有漏斗支撐</p></div>
-        <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Content going out every week, revenue is zero</p><p class="ba-text zh">每週持續輸出內容，收入依然是零</p></div>
+        <div class="stagger">
+          <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Views coming in, no way to capture them</p><p class="ba-text zh">有觀看人數，但沒有辦法留住他們</p></div>
+          <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Followers with nowhere to go after watching</p><p class="ba-text zh">追蹤者看完影片後無處可去</p></div>
+          <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">No offer, or an offer sitting with no funnel behind it</p><p class="ba-text zh">沒有產品，或有產品但沒有漏斗支撐</p></div>
+          <div class="ba-item"><span class="ba-icon">—</span><p class="ba-text en">Content going out every week, revenue is zero</p><p class="ba-text zh">每週持續輸出內容，收入依然是零</p></div>
+        </div>
       </div>
-      <div class="ba-col after">
-        <p class="ba-label en">Working with Struva</p>
-        <p class="ba-label zh">與Struva合作後</p>
-        <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Every view flows into an email list you own</p><p class="ba-text zh">每個觀看都流入你擁有的電郵名單</p></div>
-        <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Followers move through a funnel built around their words</p><p class="ba-text zh">追蹤者在根據他們語言建立的漏斗中轉化</p></div>
-        <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Offer exists and converts — built from real audience data</p><p class="ba-text zh">產品存在並能轉化——根據真實受眾數據建立</p></div>
-        <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Content compounds into consistent monthly income</p><p class="ba-text zh">內容轉化為穩定的每月收入</p></div>
+      <div class="ba-col after reveal-right">
+        <p class="ba-label en">Working with Kaido</p>
+        <p class="ba-label zh">與Kaido合作後</p>
+        <div class="stagger">
+          <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Every view flows into an email list you own</p><p class="ba-text zh">每個觀看都流入你擁有的電郵名單</p></div>
+          <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Followers move through a funnel built around their words</p><p class="ba-text zh">追蹤者在根據他們語言建立的漏斗中轉化</p></div>
+          <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Offer exists and converts — built from real audience data</p><p class="ba-text zh">產品存在並能轉化——根據真實受眾數據建立</p></div>
+          <div class="ba-item"><span class="ba-icon" style="color:var(--amber)">→</span><p class="ba-text en">Content compounds into consistent monthly income</p><p class="ba-text zh">內容轉化為穩定的每月收入</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -187,9 +268,9 @@ body.lang-zh .en{display:none !important}
 
 <section id="how">
   <div class="wrap">
-    <p class="section-tag en">How it works</p>
-    <p class="section-tag zh">合作方式</p>
-    <div class="how-steps">
+    <p class="section-tag en reveal-soft">How it works</p>
+    <p class="section-tag zh reveal-soft">合作方式</p>
+    <div class="how-steps stagger">
       <div class="how-step">
         <span class="step-num">01</span>
         <div>
@@ -223,9 +304,9 @@ body.lang-zh .en{display:none !important}
 
 <section id="pain">
   <div class="wrap">
-    <p class="section-tag en">Common concerns</p>
-    <p class="section-tag zh">常見顧慮</p>
-    <div class="pain-grid">
+    <p class="section-tag en reveal-soft">Common concerns</p>
+    <p class="section-tag zh reveal-soft">常見顧慮</p>
+    <div class="pain-grid stagger">
       <div class="pain-card">
         <p class="pain-q en">"I don't have time to manage another person."</p>
         <p class="pain-q zh">「我沒時間管理另一個人。」</p>
@@ -256,39 +337,41 @@ body.lang-zh .en{display:none !important}
 
 <section id="services">
   <div class="wrap">
-    <p class="section-tag en">What I build</p>
-    <p class="section-tag zh">我負責建立</p>
-    <div class="service-item">
-      <span class="snum">01</span>
-      <div>
-        <p class="stext-en en">A content system that turns views into booked calls</p>
-        <p class="stext-zh zh">把觀看人數轉化為預約電話的內容系統</p>
+    <p class="section-tag en reveal-soft">What I build</p>
+    <p class="section-tag zh reveal-soft">我負責建立</p>
+    <div class="stagger">
+      <div class="service-item">
+        <span class="snum">01</span>
+        <div>
+          <p class="stext-en en">A content system that turns views into booked calls</p>
+          <p class="stext-zh zh">把觀看人數轉化為預約電話的內容系統</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <span class="snum">02</span>
+        <div>
+          <p class="stext-en en">An email funnel that converts followers into buyers</p>
+          <p class="stext-zh zh">把追蹤者轉化為買家的電郵漏斗</p>
+        </div>
+      </div>
+      <div class="service-item">
+        <span class="snum">03</span>
+        <div>
+          <p class="stext-en en">An offer built directly from your audience's own words</p>
+          <p class="stext-zh zh">根據你受眾語言打造的產品</p>
+        </div>
       </div>
     </div>
-    <div class="service-item">
-      <span class="snum">02</span>
-      <div>
-        <p class="stext-en en">An email funnel that converts followers into buyers</p>
-        <p class="stext-zh zh">把追蹤者轉化為買家的電郵漏斗</p>
-      </div>
-    </div>
-    <div class="service-item">
-      <span class="snum">03</span>
-      <div>
-        <p class="stext-en en">An offer built directly from your audience's own words</p>
-        <p class="stext-zh zh">根據你受眾語言打造的產品</p>
-      </div>
-    </div>
-    <p class="services-note en"><strong>Pure revenue share.</strong> I only earn when you earn. No setup fees. No monthly retainer. You keep full control — I build the infrastructure that connects your audience to consistent income.</p>
-    <p class="services-note zh"><strong>純分潤模式。</strong>我賺錢，才代表你賺錢。沒有開戶費，沒有月費。你保持完全控制權——我只負責建立把你的受眾轉化為穩定收入的基礎設施。</p>
+    <p class="services-note en reveal"><strong>Pure revenue share.</strong> I only earn when you earn. No setup fees. No monthly retainer. You keep full control — I build the infrastructure that connects your audience to consistent income.</p>
+    <p class="services-note zh reveal"><strong>純分潤模式。</strong>我賺錢，才代表你賺錢。沒有開戶費，沒有月費。你保持完全控制權——我只負責建立把你的受眾轉化為穩定收入的基礎設施。</p>
   </div>
 </section>
 
 <section id="faq">
   <div class="wrap">
-    <p class="section-tag en">FAQ</p>
-    <p class="section-tag zh">常見問題</p>
-    <div class="faq-list">
+    <p class="section-tag en reveal-soft">FAQ</p>
+    <p class="section-tag zh reveal-soft">常見問題</p>
+    <div class="faq-list stagger">
       <div class="faq-item">
         <p class="faq-q en">What if it doesn't work?</p>
         <p class="faq-q zh">如果沒有效果怎麼辦？</p>
@@ -325,20 +408,20 @@ body.lang-zh .en{display:none !important}
 
 <section id="about">
   <div class="wrap">
-    <p class="section-tag en">About</p>
-    <p class="section-tag zh">關於我</p>
+    <p class="section-tag en reveal-soft">About</p>
+    <p class="section-tag zh reveal-soft">關於我</p>
     <div class="about-layout">
-      <div>
-        <div class="photo-frame">
-          <img src="https://i.ibb.co/Pvg5R6mM/aad215dc-4afd-4bcd-910a-e769e2e234e4.jpg" alt="Lo — Struva">
+      <div class="reveal-left">
+        <div class="photo-frame" id="photoFrame">
+          <img src="https://i.ibb.co/Pvg5R6mM/aad215dc-4afd-4bcd-910a-e769e2e234e4.jpg" alt="Lo — Kaido" id="photoImg">
         </div>
         <p class="photo-caption en">Lo · Hong Kong</p>
         <p class="photo-caption zh">Lo · 香港</p>
       </div>
-      <div>
+      <div class="reveal-right">
         <p class="about-body en">I'm Lo, <strong>18, based in Hong Kong.</strong> I partner with content creators to build the systems that turn their audience into revenue — email funnels, offer architecture, and content frameworks.<br><br>I work with a small number of creators on a <strong>pure revenue share basis.</strong> No retainers. No setup fees. You don't pay me a single dollar unless we make money together. If I don't think we're a fit after the call, I'll tell you straight.</p>
         <p class="about-body zh">我是Lo，<strong>18歲，香港人。</strong>我與內容創作者合作，建立把受眾轉化為收入的系統——電郵漏斗、產品架構和內容框架。<br><br>我以<strong>純分潤模式</strong>與少數創作者合作。沒有月費，沒有開戶費。除非我們一起賺到錢，否則你不需要付我一分錢。如果通話後我認為我們不適合，我會直接告訴你。</p>
-        <div class="about-stats">
+        <div class="about-stats stagger">
           <div>
             <p class="stat-val">$0</p>
             <p class="stat-label en">Upfront cost</p>
@@ -357,19 +440,19 @@ body.lang-zh .en{display:none !important}
 
 <section id="book">
   <div class="wrap" style="text-align:center;max-width:680px;">
-    <h2 class="book-h en">Ready to turn your<br>audience into revenue?</h2>
-    <h2 class="book-h zh">準備好把你的受眾<br>轉化為收入了嗎？</h2>
-    <p class="book-sub en">Book a free 30-minute call. No pitch. Just a clear plan.</p>
-    <p class="book-sub zh">預約免費30分鐘通話。沒有推銷。只有清晰的計劃。</p>
-    <p class="book-sub2 en">I'll show you exactly what's missing and what I'd build.</p>
-    <p class="book-sub2 zh">我會告訴你缺少什麼，以及我會如何建立它。</p>
-    <a href="https://calendly.com/kalonglo61/30min" class="btn en">Book Your Free Call →</a>
-    <a href="https://calendly.com/kalonglo61/30min" class="btn zh">立即預約免費通話 →</a>
+    <h2 class="book-h en reveal">Ready to turn your<br>audience into revenue?</h2>
+    <h2 class="book-h zh reveal">準備好把你的受眾<br>轉化為收入了嗎？</h2>
+    <p class="book-sub en reveal-soft">Book a free 30-minute call. No pitch. Just a clear plan.</p>
+    <p class="book-sub zh reveal-soft">預約免費30分鐘通話。沒有推銷。只有清晰的計劃。</p>
+    <p class="book-sub2 en reveal-soft">I'll show you exactly what's missing and what I'd build.</p>
+    <p class="book-sub2 zh reveal-soft">我會告訴你缺少什麼，以及我會如何建立它。</p>
+    <a href="https://calendly.com/kalonglo61/30min" class="btn en reveal">Book Your Free Call →</a>
+    <a href="https://calendly.com/kalonglo61/30min" class="btn zh reveal">立即預約免費通話 →</a>
   </div>
 </section>
 
 <footer>
-  <span>© 2026 Struva</span>
+  <span>© 2026 Kaido</span>
   <span class="en">Hong Kong · Revenue Partnerships</span>
   <span class="zh">香港 · 收益合作</span>
 </footer>
@@ -380,6 +463,97 @@ function setLang(l){
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b.textContent.trim()===(l==='zh'?'中文':'EN'));});
   document.documentElement.lang=l==='zh'?'zh-Hant':'en';
 }
+
+/* ───── Scroll-driven motion ─────
+   - IntersectionObserver reveals (no jank, only triggers when entering viewport)
+   - rAF-throttled scroll handler for progress bar, nav state, hero parallax
+   - All effects respect prefers-reduced-motion
+*/
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Reveal on scroll
+  var revealEls = document.querySelectorAll('.reveal, .reveal-soft, .reveal-left, .reveal-right, .stagger');
+  if('IntersectionObserver' in window && !reduced){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    revealEls.forEach(function(el){io.observe(el);});
+  } else {
+    // Fallback: show everything immediately
+    revealEls.forEach(function(el){el.classList.add('in');});
+  }
+
+  // ── rAF-throttled scroll for nav, progress, hero parallax
+  var nav = document.getElementById('nav');
+  var bar = document.getElementById('scrollProgress');
+  var wm  = document.getElementById('heroWatermark');
+  var photoImg = document.getElementById('photoImg');
+  var heroEl = document.getElementById('hero');
+  var ticking = false;
+
+  // Disable heaviest parallax on small / touch screens
+  var isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  var isSmall = window.matchMedia('(max-width: 680px)').matches;
+  var enableParallax = !reduced && !isSmall;
+
+  function onScroll(){
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    var docH = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docH > 0 ? (y / docH) : 0;
+
+    // Progress bar
+    if(bar) bar.style.width = (pct * 100) + '%';
+
+    // Nav scrolled state
+    if(nav){
+      if(y > 40) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    }
+
+    // Hero watermark parallax (only while hero is in view-ish, desktop only)
+    if(enableParallax && wm && heroEl){
+      var heroBottom = heroEl.offsetTop + heroEl.offsetHeight;
+      if(y < heroBottom + 200){
+        // gentle downward drift + slight horizontal sway with scroll
+        var t = y * 0.25;
+        wm.style.transform = 'translate(-50%, calc(-50% + ' + t + 'px))';
+      }
+    }
+
+    // About photo subtle parallax (zoom-out on enter)
+    if(enableParallax && photoImg){
+      var rect = photoImg.getBoundingClientRect();
+      var vh = window.innerHeight;
+      if(rect.top < vh && rect.bottom > 0){
+        // progress through viewport, 0 (entering bottom) -> 1 (leaving top)
+        var p = 1 - (rect.top + rect.height/2) / vh;
+        p = Math.max(-0.5, Math.min(0.5, p));
+        var scale = 1.08 - (p * 0.06); // 1.11 -> 1.05 across pass
+        var shift = p * 8; // -4px -> 4px
+        photoImg.style.transform = 'scale(' + scale.toFixed(3) + ') translateY(' + shift.toFixed(1) + 'px)';
+      }
+    }
+
+    ticking = false;
+  }
+
+  function requestTick(){
+    if(!ticking){
+      window.requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, {passive:true});
+  window.addEventListener('resize', requestTick, {passive:true});
+  onScroll();
+})();
 </script>
 </body>
 </html>
